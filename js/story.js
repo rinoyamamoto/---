@@ -218,33 +218,8 @@ class StoryEngine {
         <path d="M88 106 Q100 116 112 106" stroke="#831843" stroke-width="4" stroke-linecap="round" fill="none" />
       </svg>`;
     } else if (type === 'heroine') {
-      svg = `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="heroineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ffb700"/>
-            <stop offset="100%" stop-color="#ff007b"/>
-          </linearGradient>
-        </defs>
-        <!-- 服装 -->
-        <path d="M45 240 L45 175 Q45 145 100 145 Q155 145 155 175 L155 240 Z" fill="url(#heroineGrad)" />
-        <path d="M85 145 Q100 165 115 145 Z" fill="#ffffff" />
-        <!-- 首 -->
-        <rect x="90" y="125" width="20" height="22" fill="#ffe0cc" />
-        <!-- 顔 -->
-        <ellipse cx="100" cy="92" rx="40" ry="44" fill="#fff0e6" />
-        <!-- 髪型 (ロングヘア＆リボン) -->
-        <path d="M50 140 Q45 70 100 45 Q155 70 150 140 Q142 90 100 55 Q58 90 50 140 Z" fill="#78350f" />
-        <!-- 目 (パッチリとした瞳) -->
-        <ellipse cx="84" cy="92" rx="7" ry="9" fill="#451a03" />
-        <ellipse cx="116" cy="92" rx="7" ry="9" fill="#451a03" />
-        <circle cx="86" cy="89" r="2.5" fill="#fff" />
-        <circle cx="118" cy="89" r="2.5" fill="#fff" />
-        <!-- 笑顔/期待 -->
-        <path d="M90 112 Q100 120 110 112" stroke="#9a3412" stroke-width="3" stroke-linecap="round" fill="none" />
-        <!-- 頬の赤み -->
-        <ellipse cx="73" cy="104" rx="7" ry="4" fill="#ff80b0" opacity="0.7"/>
-        <ellipse cx="127" cy="104" rx="7" ry="4" fill="#ff80b0" opacity="0.7"/>
-      </svg>`;
+      element.innerHTML = `<div class="satoru-photo-container"><img src="assets/heroine.png" class="satoru-photo-img" style="filter: drop-shadow(0 0 15px rgba(255, 0, 123, 0.5)); border-bottom-color: var(--neon-pink);" alt="ヒロイン"></div>`;
+      return;
     }
     element.innerHTML = svg;
   }
