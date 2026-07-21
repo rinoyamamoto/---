@@ -131,8 +131,8 @@ class GameEngine {
       height: 110,
       vx: -130,
       vy: 0,
-      hp: 80,
-      maxHp: 80,
+      hp: 50,
+      maxHp: 50,
       hitTimer: 0,
       attackCooldown: 2.0,
       attackIndex: 0
