@@ -58,19 +58,12 @@ class GameEngine {
         if (!this.keys.jump) this.triggerJump();
         this.keys.jump = true;
       }
-      if (['Enter', 'KeyZ', 'KeyX', 'ArrowDown', 'KeyS'].includes(e.code)) {
+      if (['Enter', 'KeyX', 'ArrowDown', 'KeyS'].includes(e.code)) {
         if (!this.keys.attack) this.triggerAttack();
         this.keys.attack = true;
-
-        if (e.code === 'KeyZ') {
-          const now = Date.now();
-          this.player.zKeyPressTimes.push(now);
-          this.player.zKeyPressTimes = this.player.zKeyPressTimes.filter(t => now - t < 1000);
-          if (this.player.zKeyPressTimes.length >= 3) {
-            this.triggerRangedAttack();
-            this.player.zKeyPressTimes = [];
-          }
-        }
+      }
+      if (e.code === 'KeyZ') {
+        this.triggerRangedAttack();
       }
       if (e.code === 'KeyE') {
         this.triggerBarrier();
@@ -81,7 +74,7 @@ class GameEngine {
       if (['ArrowLeft', 'KeyA'].includes(e.code)) this.keys.left = false;
       if (['ArrowRight', 'KeyD'].includes(e.code)) this.keys.right = false;
       if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) this.keys.jump = false;
-      if (['Enter', 'KeyZ', 'KeyX', 'ArrowDown', 'KeyS'].includes(e.code)) this.keys.attack = false;
+      if (['Enter', 'KeyX', 'ArrowDown', 'KeyS'].includes(e.code)) this.keys.attack = false;
     });
 
     // スマホ用タッチボタンイベント
@@ -123,10 +116,10 @@ class GameEngine {
       isSpecialAttacking: false,
       specialAttackTimer: 0,
       specialDamageDealt: false,
-      zKeyPressTimes: [],
       barrierActive: false,
       barrierTimer: 0,
-      barrierCooldown: 0
+      barrierCooldown: 0,
+      rangedCooldown: 0
     };
 
     // ボス初期化
@@ -209,19 +202,22 @@ class GameEngine {
   // --- 遠距離攻撃トリガー ---
   triggerRangedAttack() {
     const p = this.player;
-    if (window.audioEngine) window.audioEngine.playSE('punch'); // 発射音代用
-    
-    this.projectiles.push({
-      x: p.facing === 'right' ? p.x + p.width : p.x - 40,
-      y: p.y + 15,
-      width: 40,
-      height: 20,
-      vx: p.facing === 'right' ? 350 : -350,
-      vy: 0,
-      type: 'player_shot',
-      isEnemy: false
-    });
-    this.spawnParticles(p.x + (p.facing === 'right' ? p.width : 0), p.y + 25, '#00f3ff', 10);
+    if (p.rangedCooldown <= 0) {
+      p.rangedCooldown = 5.0; // 5秒のクールダウン
+      if (window.audioEngine) window.audioEngine.playSE('punch'); // 発射音代用
+      
+      this.projectiles.push({
+        x: p.facing === 'right' ? p.x + p.width : p.x - 40,
+        y: p.y + 15,
+        width: 40,
+        height: 20,
+        vx: p.facing === 'right' ? 350 : -350,
+        vy: 0,
+        type: 'player_shot',
+        isEnemy: false
+      });
+      this.spawnParticles(p.x + (p.facing === 'right' ? p.width : 0), p.y + 25, '#00f3ff', 10);
+    }
   }
 
   // --- 必殺技（5秒長押し）トリガー ---
@@ -396,6 +392,7 @@ class GameEngine {
       if (p.barrierTimer <= 0) p.barrierActive = false;
     }
     if (p.barrierCooldown > 0) p.barrierCooldown -= dt;
+    if (p.rangedCooldown > 0) p.rangedCooldown -= dt;
 
     // --- 必殺技チャージ更新 (攻撃キー5秒長押し) ---
     if (this.keys.attack && !p.isSpecialAttacking) {
