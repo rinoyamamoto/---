@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>さとるくんの冒険 〜日本経済大学 渋谷キャンパスを救え！〜 | デジタルビジネス・マネジメント学科 公式PRゲーム</title>
+  <meta name="description" content="知識ゼロからでもゲームが作れる！日本経済大学 東京渋谷キャンパス デジタルビジネス・マネジメント学科の公式PRアクションゲーム。">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Background Orbs for Premium Glassmorphism Look -->
+  <div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Main Game Layout Container -->
+  <main class="main-wrapper">
+    <!-- Top Brand Header Bar -->
+    <header class="top-header">
+      <div class="brand-badge">
+        <span class="jue-tag">JUE TOKYO SHIBUYA</span>
+        <span class="dept-title">デジタルビジネス・マネジメント学科</span>
+      </div>
+      <div class="game-status-indicators">
+        <button id="sound-toggle" class="icon-btn" title="サウンド切り替え (BGM/SE)">
+          <span class="sound-icon">🔊</span>
+          <span class="sound-label">SOUND ON</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Game Viewport (16:9 Aspect Ratio) -->
+    <div id="game-container" class="game-container">
+      <!-- 2D Canvas Engine -->
+      <canvas id="game-canvas" width="1024" height="576"></canvas>
+
+      <!-- SCREEN 1: TITLE SCREEN -->
+      <section id="title-screen" class="screen-overlay active">
+        <div class="title-content">
+          <div class="subtitle-badge">
+            <span class="pulse-dot"></span>
+            高校生・新入生向け 体感型PRアクションゲーム
+          </div>
+          <h1 class="main-title">
+            <span class="title-sub">日本経済大学 渋谷キャンパスを救え！</span>
+            <span class="title-main">さとるくんの冒険</span>
+          </h1>
+          <p class="title-catchphrase">
+            「知識ゼロからでも、自分の手で物語とゲームを生み出せる。」<br>
+            立ちはだかる熱血指導『寺岡先生』を倒し、捕らわれたヒロインを救出せよ！
+          </p>
+
+          <div class="title-actions">
+            <button id="start-btn" class="glow-btn primary-btn">
+              <span class="btn-icon">▶</span>
+              <span class="btn-text">GAME START [Space]</span>
+            </button>
+          </div>
+
+          <div class="controls-preview">
+            <div class="key-hint">
+              <span class="key-badge">A</span><span class="key-badge">D</span> または <span class="key-badge">←</span><span class="key-badge">→</span> <span>移動</span>
+            </div>
+            <div class="key-hint">
+              <span class="key-badge">Space</span> <span>ジャンプ</span>
+            </div>
+            <div class="key-hint">
+              <span class="key-badge">Enter</span> / <span class="key-badge">Z</span> / <span class="key-badge">↓</span> <span>パンチ攻撃</span>
+            </div>
+            <div class="key-hint">
+              <span class="key-badge">Z (3回連打)</span> <span>遠距離攻撃（デジタル弾）</span>
+            </div>
+            <div class="key-hint">
+              <span class="key-badge">E</span> <span style="color: #00f3ff;">無敵バリア（クールダウンあり）</span>
+            </div>
+            <div class="key-hint">
+              <span class="key-badge" style="background: var(--neon-pink); border-color: #ffb700; color: #fff;">必殺技</span> <span style="color: #ffb700; font-weight: 800;">攻撃キー5秒長押しで究極ブレード発動（通常の2倍ダメージ）！</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: STORY PHASE OVERLAY (Intro / Clear) -->
+      <section id="story-screen" class="screen-overlay hidden">
+        <!-- Character Portrait Area -->
+        <div id="story-visual-container" class="story-visual">
+          <div id="char-left" class="char-portrait satoru"></div>
+          <div id="char-right" class="char-portrait teacher"></div>
+        </div>
+
+        <!-- Skip Button -->
+        <button id="skip-story-btn" class="skip-btn">スキップ ⏩</button>
+
+        <!-- Dialogue Glass Box -->
+        <div class="dialogue-box">
+          <div id="story-speaker" class="speaker-badge">さとるくん</div>
+          <div id="story-text" class="dialogue-text">テキストがここに表示されます...</div>
+          <div class="next-indicator">[Space] またはクリックで次へ ▼</div>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: BOSS FIGHT UI OVERLAY -->
+      <section id="boss-ui-overlay" class="screen-overlay hidden pointer-events-none">
+        <!-- Top UI Bar -->
+        <div class="battle-hud">
+          <!-- Player HUD -->
+          <div class="hud-card player-hud">
+            <div class="char-avatar satoru-avatar"></div>
+            <div class="hp-info">
+              <div class="name-label">さとるくん <span class="sub-label">情報系初学者</span></div>
+              <div id="player-hp-hearts" class="hearts-container">
+                <span class="heart active">❤️</span>
+                <span class="heart active">❤️</span>
+                <span class="heart active">❤️</span>
+                <span class="heart active">❤️</span>
+                <span class="heart active">❤️</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- VS Indicator -->
+          <div class="vs-badge">VS</div>
+
+          <!-- Boss HUD -->
+          <div class="hud-card boss-hud">
+            <div class="hp-info boss-info">
+              <div class="name-label">熱血指導・寺岡先生 <span class="boss-tag">BOSS</span></div>
+              <div class="boss-bar-outer">
+                <div id="boss-hp-bar" class="boss-bar-inner" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="char-avatar teacher-avatar"></div>
+          </div>
+        </div>
+
+        <!-- Boss Special Attack Banner Popup -->
+        <div id="boss-action-banner" class="boss-banner hidden">
+          <div class="banner-title">必殺技発動！</div>
+          <div id="boss-action-text" class="banner-text">【警告】難解専門用語「マーケティング戦略」の弾幕！</div>
+        </div>
+
+        <!-- Bottom Controls Hint during gameplay -->
+        <div class="game-controls-hint">
+          <span>🎮 操作：[A/D/左右キー] 移動 ｜ [Space/↑] ジャンプ ｜ [↓/Enter/Z] パンチ ｜ <strong style="color: #00f3ff;">[E] バリア</strong> ｜ <strong style="color: #fff;">[Z]3回連打で遠距離弾</strong> ｜ <strong style="color: #ffb700;">⚡[攻撃5秒長押し] 必殺「究極ブレード」</strong></span>
+        </div>
+      </section>
+
+      <!-- SCREEN 4: GAME OVER SCREEN -->
+      <section id="game-over-screen" class="screen-overlay hidden">
+        <div class="modal-card gameover-card">
+          <div class="gameover-icon">📝</div>
+          <h2 class="gameover-title">GAME OVER</h2>
+          <p class="gameover-sub">寺岡先生の熱血指導（補習課題）に屈してしまった！</p>
+          <div class="gameover-message">
+            「まだまだ諦めるな！日経大なら、失敗から学んで何度でも再挑戦できる！」
+          </div>
+          <div class="modal-buttons">
+            <button id="retry-btn" class="glow-btn retry-btn">
+              <span>🔥 もう一度挑む (RETRY)</span>
+            </button>
+            <button id="to-title-btn" class="secondary-btn">
+              <span>🏠 タイトルへ戻る</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 5: PR & RESULT SCREEN (Clear!) -->
+      <section id="pr-screen" class="screen-overlay hidden">
+        <div class="pr-card-wrapper">
+          <div class="pr-badge-top">
+            <span class="sparkle">✨</span> MISSION CLEAR & HEROINE RESCUED! <span class="sparkle">✨</span>
+          </div>
+
+          <div class="pr-card glass-panel">
+            <!-- Left Column: Story Conclusion & Heroine -->
+            <div class="pr-story-col">
+              <div class="heroine-thanks">
+                <div class="heroine-icon">👩‍🎓</div>
+                <div class="thanks-speech">
+                  <h4>ヒロインを救出！</h4>
+                  <p>「さとるくん、ありがとう！寺岡先生の難解な専門用語とプリントをクリアするなんてすごい！」</p>
+                </div>
+              </div>
+              <div class="teacher-speech">
+                <div class="teacher-icon">👨‍🏫</div>
+                <div>
+                  <p><strong>寺岡先生:</strong> 「見事だ、さとる君！論理的思考と諦めないアクションで、立派に成長したな。合格だ！」</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: High-Impact Department PR -->
+            <div class="pr-info-col">
+              <h2 class="pr-headline">
+                知識ゼロからでも、<br>
+                <span class="highlight-text">こんなゲームが作れるようになる！</span>
+              </h2>
+              <p class="pr-lead">
+                <strong>日本経済大学 東京渋谷キャンパス</strong>の<br>
+                <strong>【デジタルビジネス・マネジメント学科】</strong>では、未経験からスタートしてプログラミング、AI活用、Web開発、ビジネスマーケティングまで実践的に学べます。
+              </p>
+
+              <div class="pr-features-grid">
+                <div class="pr-feature-item">
+                  <span class="feat-icon">💻</span>
+                  <div class="feat-text">
+                    <h5>ゼロからのプログラミング</h5>
+                    <p>基礎から丁寧に、ゲームやWebアプリ制作を体験</p>
+                  </div>
+                </div>
+                <div class="pr-feature-item">
+                  <span class="feat-icon">🏙️</span>
+                  <div class="feat-text">
+                    <h5>渋谷で学ぶデジタルビジネス</h5>
+                    <p>最先端のIT・トレンド発信地「渋谷」が君のキャンパス</p>
+                  </div>
+                </div>
+                <div class="pr-feature-item">
+                  <span class="feat-icon">🚀</span>
+                  <div class="feat-text">
+                    <h5>未来を切り拓くスキル</h5>
+                    <p>AIやマネジメント力を備えた次世代のビジネスリーダーへ</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Call to Action Buttons -->
+              <div class="pr-cta-group">
+                <a href="https://shibuya.jue.ac.jp/" target="_blank" rel="noopener noreferrer" id="visit-dept-btn" class="glow-btn cta-btn">
+                  <span>🌐 デジタルビジネス・マネジメント学科の魅力を見る</span>
+                  <span class="ext-icon">↗</span>
+                </a>
+                <div class="pr-sub-buttons">
+                  <button id="replay-btn" class="secondary-btn">
+                    <span>🔁 もう一度最初から遊ぶ</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 6: MOBILE TOUCH VIRTUAL CONTROLS (Only visible on Touch/Mobile or when active) -->
+      <div id="virtual-controls" class="virtual-controls hidden">
+        <div class="dpad-area">
+          <button id="touch-left" class="v-btn v-dir">◀</button>
+          <button id="touch-right" class="v-btn v-dir">▶</button>
+        </div>
+        <div class="action-area">
+          <button id="touch-jump" class="v-btn v-jump">JUMP</button>
+          <button id="touch-attack" class="v-btn v-attack">PUNCH</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Description -->
+    <footer class="game-footer">
+      <p>© 日本経済大学 東京渋谷キャンパス | デジタルビジネス・マネジメント学科 PR Project</p>
+    </footer>
+  </main>
+
+  <!-- JavaScript Modules -->
+  <script src="js/audio.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/graphics.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
