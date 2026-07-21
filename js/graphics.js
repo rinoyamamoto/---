@@ -11,6 +11,8 @@ class GraphicsEngine {
     this.satoruImg.src = 'assets/satoru.png';
     this.satoruAttackImg = new Image();
     this.satoruAttackImg.src = 'assets/satoru_attack.png';
+    this.heroineImg = new Image();
+    this.heroineImg.src = 'assets/heroine.png';
     this.bgStars = [];
     // スター＆都市光の初期化
     for (let i = 0; i < 40; i++) {
@@ -126,39 +128,50 @@ class GraphicsEngine {
     ctx.restore();
   }
 
-  // --- ヒロイン（補習結界に閉じ込められた姿）描画 ---
+  // --- ヒロイン（檻に閉じ込められた姿）描画 ---
   renderHeroine(ctx, x, y, time = 0) {
     ctx.save();
-    // 結界バリア (円形シールド)
-    const radius = 46;
-    ctx.strokeStyle = '#ff007b';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = '#ff007b';
-    ctx.shadowBlur = 15 + Math.sin(time * 5) * 5;
+    
+    // ヒロイン画像の描画
+    if (this.heroineImg && this.heroineImg.complete) {
+      // 影をつけて少し浮き出させる
+      ctx.shadowColor = 'rgba(255, 0, 123, 0.4)';
+      ctx.shadowBlur = 10;
+      ctx.drawImage(this.heroineImg, x - 35, y - 90, 70, 90);
+      ctx.shadowBlur = 0;
+    }
+
+    // 檻 (ケージ) の描画
+    ctx.strokeStyle = '#475569'; // 鉄格子色（スレートグレー）
+    ctx.lineWidth = 4;
+    
+    const cageLeft = x - 50;
+    const cageRight = x + 50;
+    const cageTop = y - 100;
+    const cageBottom = y + 10;
+    
+    // 枠
+    ctx.strokeRect(cageLeft, cageTop, 100, 110);
+    // 縦の鉄格子
+    for (let i = 1; i <= 4; i++) {
+      ctx.beginPath();
+      ctx.moveTo(cageLeft + i * 20, cageTop);
+      ctx.lineTo(cageLeft + i * 20, cageBottom);
+      ctx.stroke();
+    }
+    // 横の補強線
     ctx.beginPath();
-    ctx.arc(x, y - 40, radius, 0, Math.PI * 2);
+    ctx.moveTo(cageLeft, cageTop + 55);
+    ctx.lineTo(cageRight, cageTop + 55);
     ctx.stroke();
-    ctx.fillStyle = 'rgba(255, 0, 123, 0.15)';
-    ctx.fill();
 
-    // ヒロイン本体 (簡易アニメーション描画)
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#ffb700'; // 髪
-    ctx.beginPath();
-    ctx.arc(x, y - 60, 16, Math.PI, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fff0e6'; // 顔
-    ctx.beginPath();
-    ctx.arc(x, y - 56, 12, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#ff007b'; // 服
-    ctx.fillRect(x - 12, y - 44, 24, 34);
-
-    // バリア上の「補習結界」テキスト
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '700 12px Noto Sans JP, sans-serif';
+    // 檻上のテキスト
+    ctx.fillStyle = '#ff4da6';
+    ctx.font = '800 14px Noto Sans JP, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🔒 補習結界', x, y - 95 + Math.sin(time * 4) * 4);
+    ctx.shadowColor = '#ff4da6';
+    ctx.shadowBlur = 10;
+    ctx.fillText('HELP! 補習の檻', x, y - 110 + Math.sin(time * 4) * 4);
     ctx.restore();
   }
 

@@ -524,6 +524,10 @@ class GameEngine {
 
     if (window.audioEngine) window.audioEngine.playSE('chalk');
 
+    // プレイヤーがボスの右にいれば 1、左なら -1
+    const dir = this.player.x > b.x ? 1 : -1;
+    const startX = dir === 1 ? b.x + b.width : b.x - 20;
+
     if (b.attackIndex === 0) {
       // 攻撃1: チョーク投げ (2連射)
       if (bannerText) bannerText.textContent = '【攻撃】チョーク高速投擲！';
@@ -534,11 +538,11 @@ class GameEngine {
           this.projectiles.push({
             isEnemy: true,
             type: 'chalk',
-            x: b.x,
+            x: startX,
             y: b.y + 40 + i * 25,
             width: 24,
             height: 10,
-            vx: -380 - Math.random() * 50,
+            vx: (380 + Math.random() * 50) * dir,
             vy: (Math.random() - 0.5) * 40
           });
           if (window.audioEngine) window.audioEngine.playSE('chalk');
@@ -554,11 +558,11 @@ class GameEngine {
           this.projectiles.push({
             isEnemy: true,
             type: 'print',
-            x: b.x - 20 - i * 60,
+            x: startX - (i * 20 * dir),
             y: b.y - 120 + i * 20, // 上空からひらひら舞い降りる
             width: 30,
             height: 40,
-            vx: -240 - Math.random() * 80,
+            vx: (240 + Math.random() * 80) * dir,
             vy: 110 + Math.random() * 100
           });
         }, i * 180);
@@ -573,11 +577,11 @@ class GameEngine {
         isEnemy: true,
         type: 'term',
         termText: pickedTerm,
-        x: b.x - 20,
+        x: startX,
         y: b.y + 50,
         width: 140,
         height: 32,
-        vx: -420,
+        vx: 420 * dir,
         vy: (this.player.y - b.y) * 0.4
       });
     }
