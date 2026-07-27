@@ -13,6 +13,8 @@ class GraphicsEngine {
     this.satoruAttackImg.src = 'assets/satoru_attack.png';
     this.heroineImg = new Image();
     this.heroineImg.src = 'assets/heroine.png';
+    this.bossImg = new Image();
+    this.bossImg.src = 'assets/boss.png';
     this.bgStars = [];
     // スター＆都市光の初期化
     for (let i = 0; i < 40; i++) {
@@ -404,65 +406,74 @@ class GraphicsEngine {
 
     const hover = Math.sin(Date.now() * 0.006) * 12;
 
-    // 1. ボスオーラ (強烈な熱血エネルギー)
-    ctx.fillStyle = 'rgba(255, 0, 123, 0.15)';
-    ctx.beginPath();
-    ctx.arc(0, -60 + hover, 65, 0, Math.PI * 2);
-    ctx.fill();
+    if (this.bossImg && this.bossImg.complete && this.bossImg.naturalWidth > 0) {
+      // 影をつけてボス画像を少し大きく描画
+      ctx.shadowColor = 'rgba(107, 33, 168, 0.6)';
+      ctx.shadowBlur = 20;
+      // ボスの向きを反映する場合は scale を変える手もあるが今回はそのまま
+      ctx.drawImage(this.bossImg, -60, -140 + hover, 120, 140);
+      ctx.shadowBlur = 0;
+    } else {
+      // 1. ボスオーラ (強烈な熱血エネルギー)
+      ctx.fillStyle = 'rgba(255, 0, 123, 0.15)';
+      ctx.beginPath();
+      ctx.arc(0, -60 + hover, 65, 0, Math.PI * 2);
+      ctx.fill();
 
-    // 2. マント・スーツ
-    ctx.fillStyle = '#6b21a8';
-    ctx.beginPath();
-    ctx.moveTo(-35, -90 + hover);
-    ctx.lineTo(45, -90 + hover);
-    ctx.lineTo(60, -10 + hover);
-    ctx.lineTo(-45, -10 + hover);
-    ctx.closePath();
-    ctx.fill();
+      // 2. マント・スーツ
+      ctx.fillStyle = '#6b21a8';
+      ctx.beginPath();
+      ctx.moveTo(-35, -90 + hover);
+      ctx.lineTo(45, -90 + hover);
+      ctx.lineTo(60, -10 + hover);
+      ctx.lineTo(-45, -10 + hover);
+      ctx.closePath();
+      ctx.fill();
 
-    // スーツ胴体
-    ctx.fillStyle = '#831843';
-    ctx.fillRect(-26, -95 + hover, 52, 60);
+      // スーツ胴体
+      ctx.fillStyle = '#831843';
+      ctx.fillRect(-26, -95 + hover, 52, 60);
 
-    // 金のネクタイ
-    ctx.fillStyle = '#ffb700';
-    ctx.beginPath();
-    ctx.moveTo(-6, -95 + hover);
-    ctx.lineTo(6, -95 + hover);
-    ctx.lineTo(10, -45 + hover);
-    ctx.lineTo(-10, -45 + hover);
-    ctx.closePath();
-    ctx.fill();
+      // 金のネクタイ
+      ctx.fillStyle = '#ffb700';
+      ctx.beginPath();
+      ctx.moveTo(-6, -95 + hover);
+      ctx.lineTo(6, -95 + hover);
+      ctx.lineTo(10, -45 + hover);
+      ctx.lineTo(-10, -45 + hover);
+      ctx.closePath();
+      ctx.fill();
 
-    // 3. 頭部・顔
-    ctx.fillStyle = '#fbcfe8';
-    ctx.beginPath();
-    ctx.arc(0, -115 + hover, 24, 0, Math.PI * 2);
-    ctx.fill();
+      // 3. 頭部・顔
+      ctx.fillStyle = '#fbcfe8';
+      ctx.beginPath();
+      ctx.arc(0, -115 + hover, 24, 0, Math.PI * 2);
+      ctx.fill();
 
-    // 熱血メガネ（光る！）
-    ctx.strokeStyle = '#ff007b';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = '#ff007b';
-    ctx.shadowBlur = 10;
-    ctx.strokeRect(-18, -122 + hover, 14, 10);
-    ctx.strokeRect(4, -122 + hover, 14, 10);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.fillRect(-16, -120 + hover, 10, 6);
-    ctx.fillRect(6, -120 + hover, 10, 6);
-    ctx.shadowBlur = 0;
+      // 熱血メガネ（光る！）
+      ctx.strokeStyle = '#ff007b';
+      ctx.lineWidth = 3;
+      ctx.shadowColor = '#ff007b';
+      ctx.shadowBlur = 10;
+      ctx.strokeRect(-18, -122 + hover, 14, 10);
+      ctx.strokeRect(4, -122 + hover, 14, 10);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.fillRect(-16, -120 + hover, 10, 6);
+      ctx.fillRect(6, -120 + hover, 10, 6);
+      ctx.shadowBlur = 0;
 
-    // 熱血口
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.arc(0, -103 + hover, 8, 0, Math.PI);
-    ctx.stroke();
+      // 熱血口
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, -103 + hover, 8, 0, Math.PI);
+      ctx.stroke();
 
-    // 4. 右腕（攻撃動作・チョーク/プリント持ち）
-    ctx.fillStyle = '#831843';
-    ctx.fillRect(-45, -90 + hover, 18, 40);
-    ctx.fillRect(27, -90 + hover, 24, 30);
+      // 4. 右腕（攻撃動作・チョーク/プリント持ち）
+      ctx.fillStyle = '#831843';
+      ctx.fillRect(-45, -90 + hover, 18, 40);
+      ctx.fillRect(27, -90 + hover, 24, 30);
+    }
 
     ctx.restore();
   }
