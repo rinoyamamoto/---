@@ -388,7 +388,7 @@ class GraphicsEngine {
     ctx.restore();
   }
 
-  // --- ボス（熱血指導・寺岡先生）描画 ---
+  // --- ボス（熱血指導・金谷先生）描画 ---
   renderBoss(ctx, boss) {
     if (!boss.active) return;
     ctx.save();
