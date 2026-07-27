@@ -188,35 +188,9 @@ class StoryEngine {
     }
 
     // 外部画像に依存せず、高品質なSVGアバターを動的挿入
-    let svg = '';
     if (type === 'teacher') {
-      svg = `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="teacherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ff007b"/>
-            <stop offset="100%" stop-color="#6b21a8"/>
-          </linearGradient>
-        </defs>
-        <!-- 熱血スーツ -->
-        <path d="M35 240 L35 165 Q35 135 100 135 Q165 135 165 165 L165 240 Z" fill="url(#teacherGrad)" />
-        <!-- ネクタイとシャツ -->
-        <polygon points="90,135 110,135 105,200 95,200" fill="#ffb700" />
-        <polygon points="85,135 115,135 100,160" fill="#ffffff" />
-        <!-- 顔 -->
-        <ellipse cx="100" cy="85" rx="44" ry="48" fill="#fbcfe8" />
-        <!-- 熱血メガネ -->
-        <rect x="68" y="76" width="26" height="16" rx="3" stroke="#ff007b" stroke-width="3" fill="rgba(255,255,255,0.4)" />
-        <rect x="106" y="76" width="26" height="16" rx="3" stroke="#ff007b" stroke-width="3" fill="rgba(255,255,255,0.4)" />
-        <line x1="94" y1="84" x2="106" y2="84" stroke="#ff007b" stroke-width="3" />
-        <!-- 目 -->
-        <circle cx="81" cy="84" r="3" fill="#831843" />
-        <circle cx="119" cy="84" r="3" fill="#831843" />
-        <!-- 眉毛 (熱血V字) -->
-        <path d="M70 68 L92 74" stroke="#831843" stroke-width="4" stroke-linecap="round" />
-        <path d="M130 68 L108 74" stroke="#831843" stroke-width="4" stroke-linecap="round" />
-        <!-- 自信と情熱の口 -->
-        <path d="M88 106 Q100 116 112 106" stroke="#831843" stroke-width="4" stroke-linecap="round" fill="none" />
-      </svg>`;
+      element.innerHTML = `<div class="satoru-photo-container"><img src="assets/teacher.png" class="satoru-photo-img" style="filter: drop-shadow(0 0 15px rgba(107, 33, 168, 0.8)); border-bottom-color: #6b21a8;" alt="金谷先生"></div>`;
+      return;
     } else if (type === 'heroine') {
       element.innerHTML = `<div class="satoru-photo-container"><img src="assets/heroine.png" class="satoru-photo-img" style="filter: drop-shadow(0 0 15px rgba(255, 0, 123, 0.5)); border-bottom-color: var(--neon-pink);" alt="ヒロイン"></div>`;
       return;
